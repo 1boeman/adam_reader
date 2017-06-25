@@ -14,8 +14,6 @@ def main():
     handler = getattr(data_handlers,sys.argv[2])
     handler(resp_json)
 
-
-
 main()
 
 
