@@ -4,6 +4,7 @@ import requests
 import sys
 import data_handlers
 import sqlite3
+from datetime import date, timedelta
 
 def main():
   prepare_tables(sys.argv[3])  
