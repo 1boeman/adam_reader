@@ -9,8 +9,8 @@ from datetime import date, timedelta
 import json
 
 def main():
-  if len(sys.argv) < 5:
-    print "usage: read.py <url> <handler> <db_file_path> <path_to_venue_mappings.xml>"
+  if len(sys.argv) < 4:
+    print "usage: read.py <url> <handler> <db_file_path>"
   else:
     prepare_tables(sys.argv[3])  
     print str(sys.argv[1])
@@ -19,7 +19,7 @@ def main():
     #  resp_json = resp.json()
     resp_json = json.loads(resp.content)
     handler = getattr(data_handlers,sys.argv[2])
-    handler(resp_json,sys.argv[3],sys.argv[4])
+    handler(resp_json,sys.argv[3])
 
 
 def prepare_tables(database_file_path):
@@ -32,8 +32,9 @@ def prepare_tables(database_file_path):
       key = idx+1
       db.execute("INSERT INTO EventGenres VALUES (?,?)",(key, val))
 
-    db.execute ('CREATE TABLE IF NOT EXISTS EventDates (id TEXT PRIMARY KEY,date TEXT)')
-    db.execute ("CREATE TABLE IF NOT EXISTS Event (id TEXT PRIMARY KEY, startDate TEXT, endDate TEXT, time TEXT,"
+    db.execute ('CREATE TABLE IF NOT EXISTS EventDates (id TEXT,date TEXT)')
+
+    db.execute ("CREATE TABLE IF NOT EXISTS Event (id TEXT UNIQUE PRIMARY KEY, startDate TEXT, endDate TEXT, time TEXT,"
                 "img TEXT, link TEXT, title TEXT, desc TEXT, venue TEXT, genre int, type TEXT default 'crawl')")
     try:
       db.execute ("ALTER TABLE Event ADD COLUMN IF NOT EXISTS venuePlainText TEXT");
